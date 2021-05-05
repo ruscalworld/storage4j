@@ -11,6 +11,9 @@ import java.util.UUID;
 public class ReflectUtil {
     private static final HashMap<Class<?>, Converter<?>> CONVERTERS = new HashMap<>() {{
         put(int.class, (v) -> Integer.parseInt(v.toString()));
+        put(float.class, (v) -> Float.parseFloat(v.toString()));
+        put(double.class, (v) -> Double.parseDouble(v.toString()));
+
         put(UUID.class, (v) -> UUID.fromString(v.toString()));
         put(Timestamp.class, (v) -> Timestamp.valueOf(v.toString()));
     }};
