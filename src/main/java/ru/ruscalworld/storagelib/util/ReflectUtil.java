@@ -1,7 +1,7 @@
 package ru.ruscalworld.storagelib.util;
 
-import ru.bortexel.core.storage.Converter;
-import ru.bortexel.core.storage.annotations.Property;
+import ru.ruscalworld.storagelib.Converter;
+import ru.ruscalworld.storagelib.annotations.Property;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ReflectUtil {
-    private static final HashMap<Class<?>, Converter<?>> CONVERTERS = new HashMap<Class<?>, Converter<?>>() {{
+    private static final HashMap<Class<?>, Converter<?>> CONVERTERS = new HashMap<>() {{
         put(int.class, (v) -> Integer.parseInt(v.toString()));
         put(UUID.class, (v) -> UUID.fromString(v.toString()));
         put(Timestamp.class, (v) -> Timestamp.valueOf(v.toString()));
