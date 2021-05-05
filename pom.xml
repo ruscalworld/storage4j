@@ -26,4 +26,11 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/ruscalworld/storagelib</url>
+        </repository>
+    </distributionManagement>
 </project>
