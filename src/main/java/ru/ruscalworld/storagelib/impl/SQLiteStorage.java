@@ -24,6 +24,8 @@ public class SQLiteStorage implements Storage {
     private final String connectionUrl;
     private Connection connection;
 
+    private final List<String> migrations = new ArrayList<>();
+
     public SQLiteStorage(String url) {
         this.connectionUrl = url;
     }
@@ -118,10 +120,6 @@ public class SQLiteStorage implements Storage {
         return null;
     }
 
-    private final List<String> migrations = new ArrayList<String>() {{
-        add("freezes");
-    }};
-
     @Override
     public void actualizeStorageSchema() throws SQLException, IOException {
         for (String migration : this.getMigrations()) {
@@ -129,6 +127,10 @@ public class SQLiteStorage implements Storage {
             List<String> script = FileUtil.getLinesFromStream(stream);
             DatabaseUtil.executeScript(this.getConnection(), script);
         }
+    }
+
+    public void registerMigration(String name) {
+        this.migrations.add(name);
     }
 
     public List<String> getMigrations() {
