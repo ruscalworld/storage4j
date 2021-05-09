@@ -10,6 +10,7 @@ public class ConverterProvider {
     public ConverterProvider() {
         // Register default types
         this.registerConverter(int.class, (v) -> Integer.parseInt(v.toString()));
+        this.registerConverter(long.class, (v) -> Long.parseLong(v.toString()));
         this.registerConverter(float.class, (v) -> Float.parseFloat(v.toString()));
         this.registerConverter(double.class, (v) -> Double.parseDouble(v.toString()));
 
