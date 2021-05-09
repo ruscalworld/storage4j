@@ -1,6 +1,7 @@
 package ru.ruscalworld.storagelib.util;
 
 import ru.ruscalworld.storagelib.Converter;
+import ru.ruscalworld.storagelib.ConverterProvider;
 import ru.ruscalworld.storagelib.annotations.Property;
 
 import java.lang.reflect.Field;
@@ -9,15 +10,6 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ReflectUtil {
-    private static final HashMap<Class<?>, Converter<?>> CONVERTERS = new HashMap<>() {{
-        put(int.class, (v) -> Integer.parseInt(v.toString()));
-        put(float.class, (v) -> Float.parseFloat(v.toString()));
-        put(double.class, (v) -> Double.parseDouble(v.toString()));
-
-        put(UUID.class, (v) -> UUID.fromString(v.toString()));
-        put(Timestamp.class, (v) -> Timestamp.valueOf(v.toString()));
-    }};
-
     /**
      * Retrieves list of declared fields annotated with {@link Property} in given class.
      * @param clazz Class to get fields from
@@ -44,8 +36,8 @@ public class ReflectUtil {
      * @param field Field of instance to update
      * @param value Value that should be set to the field
      */
-    public static void setFieldValue(Object instance, Field field, Object value) throws IllegalAccessException, IllegalArgumentException {
-        Converter<?> converter = CONVERTERS.get(field.getType());
+    public static void setFieldValue(Object instance, Field field, Object value, ConverterProvider provider) throws IllegalAccessException, IllegalArgumentException {
+        Converter<?> converter = provider.getConverter(field.getType());
         if (converter != null) field.set(instance, converter.convert(value));
         else field.set(instance, value);
     }

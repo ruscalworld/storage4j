@@ -2,6 +2,8 @@ package ru.ruscalworld.storagelib.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.sqlite.JDBC;
+import ru.ruscalworld.storagelib.Converter;
+import ru.ruscalworld.storagelib.ConverterProvider;
 import ru.ruscalworld.storagelib.DefaultModel;
 import ru.ruscalworld.storagelib.Storage;
 import ru.ruscalworld.storagelib.annotations.Model;
@@ -23,6 +25,7 @@ import java.util.List;
 public class SQLiteStorage implements Storage {
     private final String connectionUrl;
     private Connection connection;
+    private ConverterProvider converterProvider;
 
     private final List<String> migrations = new ArrayList<>();
 
@@ -112,6 +115,16 @@ public class SQLiteStorage implements Storage {
         return statement.executeUpdate();
     }
 
+    @Override
+    public ConverterProvider getConverterProvider() {
+        return this.converterProvider;
+    }
+
+    @Override
+    public void registerConverter(Class<?> clazz, Converter<?> converter) {
+        this.converterProvider.registerConverter(clazz, converter);
+    }
+
     public <T> T parseRow(Class<T> clazz, ResultSet resultSet) throws SQLException {
         try {
             T instance = clazz.getConstructor().newInstance();
@@ -123,7 +136,7 @@ public class SQLiteStorage implements Storage {
 
                 Field field = fields.get(column);
                 field.setAccessible(true);
-                ReflectUtil.setFieldValue(instance, field, value);
+                ReflectUtil.setFieldValue(instance, field, value, this.getConverterProvider());
             }
 
             return instance;
