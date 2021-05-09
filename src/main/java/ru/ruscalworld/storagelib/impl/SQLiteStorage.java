@@ -84,7 +84,7 @@ public class SQLiteStorage implements Storage {
         return result;
     }
 
-    public <T extends DefaultModel> int save(@NotNull T model) throws InvalidModelException, SQLException {
+    public <T extends DefaultModel> long save(@NotNull T model) throws InvalidModelException, SQLException {
         Class<? extends DefaultModel> clazz = model.getClass();
         if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
 
@@ -112,7 +112,8 @@ public class SQLiteStorage implements Storage {
             statement = DatabaseUtil.makeInsertStatement(values, table, this.getConnection());
         } else statement = DatabaseUtil.makeUpdateStatement("id", "" + model.getId(), values, table, this.getConnection());
 
-        return statement.executeUpdate();
+        statement.executeUpdate();
+        return model.getId() == 0 ? statement.getGeneratedKeys().getLong(1) : model.getId();
     }
 
     @Override

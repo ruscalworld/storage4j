@@ -86,7 +86,7 @@ public class DatabaseUtil {
         // Make complete query: INSERT INTO `table` (name,owner,...) VALUES (?,?,...)
         String query = String.format("INSERT INTO `%s` %s VALUES %s", namespace, schema, values);
 
-        PreparedStatement statement = connection.prepareStatement(query);
+        PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
         // Add values to statement
         int i = 1;

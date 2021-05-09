@@ -1,6 +1,7 @@
 package ru.ruscalworld.storagelib.impl;
 
 import org.junit.jupiter.api.*;
+import ru.ruscalworld.storagelib.exceptions.InvalidModelException;
 import ru.ruscalworld.storagelib.exceptions.NotFoundException;
 import ru.ruscalworld.storagelib.models.TestModel;
 
@@ -29,14 +30,16 @@ class SQLiteStorageTest {
 
     @Test
     @Order(2)
-    void save() {
+    void save() throws InvalidModelException, SQLException {
         TestModel model = new TestModel();
         model.setFloatProperty(2.5F);
         model.setDoubleProperty(7.5D);
         model.setTimestamp(new Timestamp(System.currentTimeMillis()));
         model.setStringProperty("Some String");
         model.setUuidProperty(UUID.randomUUID());
+
         assertDoesNotThrow(() -> storage.save(model));
+        assertEquals(2, storage.save(model));
     }
 
     @Test
@@ -54,7 +57,7 @@ class SQLiteStorageTest {
     void retrieveAll() {
         final List<TestModel> result = new ArrayList<>();
         assertDoesNotThrow(() -> result.addAll(storage.retrieveAll(TestModel.class)));
-        assertEquals(1, result.size());
+        assertEquals(2, result.size());
     }
 
     @AfterAll
