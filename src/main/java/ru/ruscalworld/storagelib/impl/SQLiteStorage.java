@@ -25,7 +25,7 @@ import java.util.List;
 public class SQLiteStorage implements Storage {
     private final String connectionUrl;
     private Connection connection;
-    private ConverterProvider converterProvider;
+    private final ConverterProvider converterProvider = new ConverterProvider();
 
     private final List<String> migrations = new ArrayList<>();
 
@@ -164,7 +164,7 @@ public class SQLiteStorage implements Storage {
         return migrations;
     }
 
-    private Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         if (this.connection != null && !this.connection.isClosed()) return this.connection;
         return DriverManager.getConnection(this.getConnectionUrl());
     }
