@@ -88,7 +88,7 @@ public class SQLiteStorage implements Storage {
         Class<? extends DefaultModel> clazz = model.getClass();
         if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
 
-        HashMap<String, Field> fields = ReflectUtil.getClassFields(clazz);
+        HashMap<String, Field> fields = ReflectUtil.getClassFields(clazz, model.getId() == 0);
         HashMap<String, String> values = new HashMap<>();
 
         for (String name : fields.keySet()) {

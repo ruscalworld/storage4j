@@ -2,6 +2,7 @@ package ru.ruscalworld.storagelib.util;
 
 import ru.ruscalworld.storagelib.Converter;
 import ru.ruscalworld.storagelib.ConverterProvider;
+import ru.ruscalworld.storagelib.annotations.DefaultGenerated;
 import ru.ruscalworld.storagelib.annotations.Property;
 
 import java.lang.reflect.Field;
@@ -10,16 +11,28 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ReflectUtil {
+
     /**
      * Retrieves list of declared fields annotated with {@link Property} in given class.
      * @param clazz Class to get fields from
      * @return Map where key is field name and value is a field instance
      */
     public static <T> HashMap<String, Field> getClassFields(Class<T> clazz) {
+        return getClassFields(clazz, false);
+    }
+
+    /**
+     * Retrieves list of declared fields annotated with {@link Property} in given class.
+     * @param clazz Class to get fields from
+     * @param excludeDefaultGenerated If true, only fields not annotated with {@link DefaultGenerated} will be returned
+     * @return Map where key is field name and value is a field instance
+     */
+    public static <T> HashMap<String, Field> getClassFields(Class<T> clazz, boolean excludeDefaultGenerated) {
         final HashMap<String, Field> fields = new HashMap<>();
 
         for (Field field : clazz.getDeclaredFields()) {
             if (!field.isAnnotationPresent(Property.class)) continue;
+            if (excludeDefaultGenerated && field.isAnnotationPresent(DefaultGenerated.class)) continue;
             Property property = field.getAnnotation(Property.class);
             fields.put(property.column(), field);
         }

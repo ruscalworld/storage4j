@@ -1,1 +1,1 @@
-CREATE TABLE IF NOT EXISTS `test` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `double` DOUBLE, `float` FLOAT, `string` VARCHAR(100), `uuid` VARCHAR(100), `timestamp` TIMESTAMP);
+CREATE TABLE IF NOT EXISTS `test` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `double` DOUBLE, `float` FLOAT, `string` VARCHAR(100), `uuid` VARCHAR(100), `timestamp` TIMESTAMP, `default_timestamp` TIMESTAMP DEFAULT (DATETIME('now', 'localtime')));

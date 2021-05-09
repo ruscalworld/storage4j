@@ -30,7 +30,7 @@ class SQLiteStorageTest {
 
     @Test
     @Order(2)
-    void save() throws InvalidModelException, SQLException {
+    void save() throws InvalidModelException, SQLException, NotFoundException {
         TestModel model = new TestModel();
         model.setFloatProperty(2.5F);
         model.setDoubleProperty(7.5D);
@@ -40,6 +40,9 @@ class SQLiteStorageTest {
 
         assertDoesNotThrow(() -> storage.save(model));
         assertEquals(2, storage.save(model));
+
+        TestModel savedModel = storage.retrieve(TestModel.class, 1);
+        assertTrue(savedModel.getDefaultTimestamp().after(new Timestamp(System.currentTimeMillis() - 60 * 1000)));
     }
 
     @Test

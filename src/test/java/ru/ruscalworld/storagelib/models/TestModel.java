@@ -1,6 +1,7 @@
 package ru.ruscalworld.storagelib.models;
 
 import ru.ruscalworld.storagelib.DefaultModel;
+import ru.ruscalworld.storagelib.annotations.DefaultGenerated;
 import ru.ruscalworld.storagelib.annotations.Model;
 import ru.ruscalworld.storagelib.annotations.Property;
 
@@ -23,6 +24,10 @@ public class TestModel extends DefaultModel {
 
     @Property(column = "timestamp")
     private Timestamp timestamp;
+
+    @Property(column = "default_timestamp")
+    @DefaultGenerated
+    private Timestamp defaultTimestamp;
 
     public TestModel() {
 
@@ -66,5 +71,13 @@ public class TestModel extends DefaultModel {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public Timestamp getDefaultTimestamp() {
+        return defaultTimestamp;
+    }
+
+    public void setDefaultTimestamp(Timestamp defaultTimestamp) {
+        this.defaultTimestamp = defaultTimestamp;
     }
 }
