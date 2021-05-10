@@ -117,6 +117,19 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
+    public <T extends DefaultModel> void delete(T model) throws Exception {
+        Class<? extends DefaultModel> clazz = model.getClass();
+        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
+        Model modelInfo = clazz.getAnnotation(Model.class);
+        String table = modelInfo.table();
+
+        String query = String.format("DELETE FROM `%s` WHERE `id` = ?", table);
+        PreparedStatement statement = this.getConnection().prepareStatement(query);
+        statement.setLong(1, model.getId());
+        statement.executeUpdate();
+    }
+
+    @Override
     public ConverterProvider getConverterProvider() {
         return this.converterProvider;
     }

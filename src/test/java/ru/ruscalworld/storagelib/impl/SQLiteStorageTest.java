@@ -46,21 +46,32 @@ class SQLiteStorageTest {
     }
 
     @Test
+    @Order(3)
     void find() {
         assertDoesNotThrow(() -> storage.find(TestModel.class, "string", "Some String"));
         assertThrows(NotFoundException.class, () -> storage.find(TestModel.class, "string", "Some Another String"));
     }
 
     @Test
+    @Order(3)
     void retrieve() {
         assertDoesNotThrow(() -> storage.retrieve(TestModel.class, 1));
     }
 
     @Test
+    @Order(3)
     void retrieveAll() {
         final List<TestModel> result = new ArrayList<>();
         assertDoesNotThrow(() -> result.addAll(storage.retrieveAll(TestModel.class)));
         assertEquals(2, result.size());
+    }
+
+    @Test
+    @Order(4)
+    void delete() throws InvalidModelException, SQLException, NotFoundException {
+        TestModel model = storage.retrieve(TestModel.class, 1);
+        assertDoesNotThrow(() -> storage.delete(model));
+        assertThrows(NotFoundException.class, () -> storage.retrieve(TestModel.class, 1));
     }
 
     @AfterAll

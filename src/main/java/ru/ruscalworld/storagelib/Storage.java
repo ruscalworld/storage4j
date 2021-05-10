@@ -10,6 +10,7 @@ public interface Storage {
     <T> T retrieve(Class<T> clazz, long id) throws Exception;
     <T> List<T> retrieveAll(Class<T> clazz) throws Exception;
     <T extends DefaultModel> long save(T model) throws Exception;
+    <T extends DefaultModel> void delete(T model) throws Exception;
     ConverterProvider getConverterProvider();
     void registerConverter(Class<?> clazz, Converter<?> converter);
     void actualizeStorageSchema() throws Exception;
