@@ -14,8 +14,8 @@ public class ConverterProvider {
         this.registerConverter(float.class, (v) -> Float.parseFloat(v.toString()));
         this.registerConverter(double.class, (v) -> Double.parseDouble(v.toString()));
 
-        this.registerConverter(UUID.class, (v) -> UUID.fromString(v.toString()));
-        this.registerConverter(Timestamp.class, (v) -> Timestamp.valueOf(v.toString()));
+        this.registerConverter(UUID.class, (v) -> v == null ? null : UUID.fromString(v.toString()));
+        this.registerConverter(Timestamp.class, (v) -> v == null ? null : Timestamp.valueOf(v.toString()));
     }
 
     public void registerConverter(Class<?> clazz, Converter<?> converter) {
