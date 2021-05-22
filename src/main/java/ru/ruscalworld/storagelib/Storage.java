@@ -7,6 +7,7 @@ import java.util.List;
 public interface Storage {
     void setup() throws Exception;
     <T> T find(@NotNull Class<T> clazz, String key, Object value) throws Exception;
+    <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws Exception;
     <T> T retrieve(Class<T> clazz, long id) throws Exception;
     <T> List<T> retrieveAll(Class<T> clazz) throws Exception;
     <T extends DefaultModel> long save(T model) throws Exception;

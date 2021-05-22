@@ -56,6 +56,22 @@ public class SQLiteStorage implements Storage {
         return this.parseRow(clazz, resultSet);
     }
 
+    @Override
+    public <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws Exception {
+        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
+        Model model = clazz.getAnnotation(Model.class);
+
+        String query = String.format("SELECT * FROM `%s` WHERE `%s` = ?", model.table(), key);
+        PreparedStatement statement = this.getConnection().prepareStatement(query);
+        statement.setObject(1, value);
+
+        ResultSet resultSet = statement.executeQuery();
+        List<T> result = new ArrayList<>();
+        while (resultSet.next()) result.add(this.parseRow(clazz, resultSet));
+
+        return result;
+    }
+
     public <T> T retrieve(@NotNull Class<T> clazz, long id) throws SQLException, InvalidModelException, NotFoundException {
         if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
         Model model = clazz.getAnnotation(Model.class);

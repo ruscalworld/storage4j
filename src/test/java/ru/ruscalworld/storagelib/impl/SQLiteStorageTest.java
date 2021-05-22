@@ -39,6 +39,8 @@ class SQLiteStorageTest {
         model.setUuidProperty(UUID.randomUUID());
 
         assertDoesNotThrow(() -> storage.save(model));
+
+        model.setDoubleProperty(2.5D);
         assertEquals(2, storage.save(model));
 
         TestModel savedModel = storage.retrieve(TestModel.class, 1);
@@ -50,6 +52,14 @@ class SQLiteStorageTest {
     void find() {
         assertDoesNotThrow(() -> storage.find(TestModel.class, "string", "Some String"));
         assertThrows(NotFoundException.class, () -> storage.find(TestModel.class, "string", "Some Another String"));
+    }
+
+    @Test
+    @Order(3)
+    void findAll() {
+        final List<TestModel> result = new ArrayList<>();
+        assertDoesNotThrow(() -> result.addAll(storage.findAll(TestModel.class, "double", 2.5D)));
+        assertEquals(1, result.size());
     }
 
     @Test
