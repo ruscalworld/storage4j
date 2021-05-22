@@ -78,6 +78,18 @@ class SQLiteStorageTest {
 
     @Test
     @Order(4)
+    void deleteAll() throws Exception {
+        storage.deleteAll(TestModel.class, "string", "Some Unexisting String");
+        List<TestModel> models = storage.retrieveAll(TestModel.class);
+        assertEquals(2, models.size());
+
+        storage.deleteAll(TestModel.class, "double", 2.5D);
+        models = storage.retrieveAll(TestModel.class);
+        assertEquals(1, models.size());
+    }
+
+    @Test
+    @Order(5)
     void delete() throws InvalidModelException, SQLException, NotFoundException {
         TestModel model = storage.retrieve(TestModel.class, 1);
         assertDoesNotThrow(() -> storage.delete(model));
