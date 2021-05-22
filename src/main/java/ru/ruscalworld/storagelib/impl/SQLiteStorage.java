@@ -43,13 +43,9 @@ public class SQLiteStorage implements Storage {
     }
 
     public <T> T find(@NotNull Class<T> clazz, String key, Object value) throws SQLException, NotFoundException, InvalidModelException {
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
-        Model model = clazz.getAnnotation(Model.class);
+        Model model = ReflectUtil.getModelInfo(clazz);
 
-        String query = String.format("SELECT * FROM `%s` WHERE `%s` = ?", model.table(), key);
-        PreparedStatement statement = this.getConnection().prepareStatement(query);
-        statement.setObject(1, value);
-
+        PreparedStatement statement = this.makeSearchStatement(model, key, value);
         ResultSet resultSet = statement.executeQuery();
         if (!resultSet.next()) throw new NotFoundException(key, value);
 
@@ -58,13 +54,9 @@ public class SQLiteStorage implements Storage {
 
     @Override
     public <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws Exception {
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
-        Model model = clazz.getAnnotation(Model.class);
+        Model model = ReflectUtil.getModelInfo(clazz);
 
-        String query = String.format("SELECT * FROM `%s` WHERE `%s` = ?", model.table(), key);
-        PreparedStatement statement = this.getConnection().prepareStatement(query);
-        statement.setObject(1, value);
-
+        PreparedStatement statement = this.makeSearchStatement(model, key, value);
         ResultSet resultSet = statement.executeQuery();
         List<T> result = new ArrayList<>();
         while (resultSet.next()) result.add(this.parseRow(clazz, resultSet));
@@ -73,22 +65,25 @@ public class SQLiteStorage implements Storage {
     }
 
     public <T> T retrieve(@NotNull Class<T> clazz, long id) throws SQLException, InvalidModelException, NotFoundException {
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
+        ReflectUtil.getModelInfo(clazz);
         Model model = clazz.getAnnotation(Model.class);
 
-        String query = String.format("SELECT * FROM `%s` WHERE `id` = ?", model.table());
-        PreparedStatement statement = this.getConnection().prepareStatement(query);
-        statement.setLong(1, id);
-
+        PreparedStatement statement = this.makeSearchStatement(model, "id", id);
         ResultSet resultSet = statement.executeQuery();
         if (!resultSet.next()) throw new NotFoundException("id", id);
 
         return this.parseRow(clazz, resultSet);
     }
 
+    private PreparedStatement makeSearchStatement(Model model, String key, Object value) throws SQLException {
+        String query = String.format("SELECT * FROM `%s` WHERE `%s` = ?", model.table(), key);
+        PreparedStatement statement = this.getConnection().prepareStatement(query);
+        statement.setObject(1, value);
+        return statement;
+    }
+
     public <T> List<T> retrieveAll(@NotNull Class<T> clazz) throws InvalidModelException, SQLException {
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
-        Model model = clazz.getAnnotation(Model.class);
+        Model model = ReflectUtil.getModelInfo(clazz);
 
         String query = String.format("SELECT * FROM `%s`", model.table());
         PreparedStatement statement = this.getConnection().prepareStatement(query);
@@ -101,8 +96,9 @@ public class SQLiteStorage implements Storage {
     }
 
     public <T extends DefaultModel> long save(@NotNull T model) throws InvalidModelException, SQLException {
+        Model modelInfo = ReflectUtil.getModelInfo(model.getClass());
         Class<? extends DefaultModel> clazz = model.getClass();
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
+        ReflectUtil.getModelInfo(clazz);
 
         HashMap<String, Field> fields = ReflectUtil.getClassFields(clazz, model.getId() == 0);
         HashMap<String, String> values = new HashMap<>();
@@ -119,7 +115,6 @@ public class SQLiteStorage implements Storage {
             values.put(name, value == null ? null : value.toString());
         }
 
-        Model modelInfo = clazz.getAnnotation(Model.class);
         String table = modelInfo.table();
         PreparedStatement statement;
 
@@ -135,8 +130,7 @@ public class SQLiteStorage implements Storage {
     @Override
     public <T extends DefaultModel> void delete(T model) throws Exception {
         Class<? extends DefaultModel> clazz = model.getClass();
-        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
-        Model modelInfo = clazz.getAnnotation(Model.class);
+        Model modelInfo = ReflectUtil.getModelInfo(model.getClass());
         String table = modelInfo.table();
 
         String query = String.format("DELETE FROM `%s` WHERE `id` = ?", table);

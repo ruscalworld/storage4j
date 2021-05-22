@@ -2,8 +2,11 @@ package ru.ruscalworld.storagelib.util;
 
 import ru.ruscalworld.storagelib.Converter;
 import ru.ruscalworld.storagelib.ConverterProvider;
+import ru.ruscalworld.storagelib.DefaultModel;
 import ru.ruscalworld.storagelib.annotations.DefaultGenerated;
+import ru.ruscalworld.storagelib.annotations.Model;
 import ru.ruscalworld.storagelib.annotations.Property;
+import ru.ruscalworld.storagelib.exceptions.InvalidModelException;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -53,5 +56,16 @@ public class ReflectUtil {
         Converter<?> converter = provider.getConverter(field.getType());
         if (converter != null) field.set(instance, converter.convert(value));
         else field.set(instance, value);
+    }
+
+    /**
+     * Checks if given class is annotated with {@link Model} and returns info provided with this annotation
+     * @param clazz Class to check
+     * @throws InvalidModelException if given class is not a valid model
+     * @return Model info
+     */
+    public static Model getModelInfo(Class<?> clazz) throws InvalidModelException {
+        if (!clazz.isAnnotationPresent(Model.class)) throw new InvalidModelException(clazz);
+        return clazz.getAnnotation(Model.class);
     }
 }
