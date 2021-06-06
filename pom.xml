@@ -45,8 +45,8 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/ruscalworld/storagelib</url>
+            <id>ruscalworld-releases</id>
+            <url>https://maven.ruscalworld.ru/releases</url>
         </repository>
     </distributionManagement>
 </project>
