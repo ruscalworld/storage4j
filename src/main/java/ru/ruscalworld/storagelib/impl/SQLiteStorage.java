@@ -199,7 +199,7 @@ public class SQLiteStorage implements Storage {
     }
 
     public Connection getConnection() throws SQLException {
-        if (this.connection != null && !this.connection.isClosed()) return this.connection;
+        if (this.connection != null && this.connection.isValid(3)) return this.connection;
         return DriverManager.getConnection(this.getConnectionUrl());
     }
 
