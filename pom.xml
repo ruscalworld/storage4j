@@ -6,7 +6,7 @@
 
     <groupId>ru.ruscalworld</groupId>
     <artifactId>storagelib</artifactId>
-    <version>1.1.5</version>
+    <version>1.1.7</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -45,8 +45,8 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/ruscalworld/storagelib</url>
+            <id>ruscalworld-releases</id>
+            <url>https://maven.ruscalworld.ru/releases</url>
         </repository>
     </distributionManagement>
 </project>
