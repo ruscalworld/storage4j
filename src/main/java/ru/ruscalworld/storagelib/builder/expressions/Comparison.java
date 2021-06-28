@@ -22,8 +22,8 @@ public class Comparison implements Expression {
         return new Comparison(left, "=", right);
     }
 
-    public static Comparison equal(String column, String value) {
-        return equal(new ColumnEx(column), new StringEx(value));
+    public static Comparison equal(String column, Object value) {
+        return equal(new ColumnEx(column), new StringEx(value.toString()));
     }
 
     @Override

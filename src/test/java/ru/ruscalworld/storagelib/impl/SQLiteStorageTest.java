@@ -1,6 +1,8 @@
 package ru.ruscalworld.storagelib.impl;
 
 import org.junit.jupiter.api.*;
+import ru.ruscalworld.storagelib.builder.expressions.Comparison;
+import ru.ruscalworld.storagelib.builder.expressions.Condition;
 import ru.ruscalworld.storagelib.exceptions.InvalidModelException;
 import ru.ruscalworld.storagelib.exceptions.NotFoundException;
 import ru.ruscalworld.storagelib.models.TestModel;
@@ -60,6 +62,13 @@ class SQLiteStorageTest {
         final List<TestModel> result = new ArrayList<>();
         assertDoesNotThrow(() -> result.addAll(storage.findAll(TestModel.class, "double", 2.5D)));
         assertEquals(1, result.size());
+
+        result.clear();
+        assertDoesNotThrow(() -> result.addAll(storage.findAll(TestModel.class, Condition.or(
+                Comparison.equal("string", "Some String"),
+                Comparison.equal("double", 2.5D)
+        ))));
+        assertEquals(2, result.size());
     }
 
     @Test
