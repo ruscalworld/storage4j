@@ -26,6 +26,62 @@ public class Comparison implements Expression {
         return equal(new ColumnEx(column), new StringEx(value.toString()));
     }
 
+    public static Comparison notEqual(Expression left, Expression right) {
+        return new Comparison(left, "!=", right);
+    }
+
+    public static Comparison notEqual(String column, Object value) {
+        return notEqual(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison biggerThan(Expression left, Expression right) {
+        return new Comparison(left, ">", right);
+    }
+
+    public static Comparison biggerThan(String column, Object value) {
+        return biggerThan(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison lessThan(Expression left, Expression right) {
+        return new Comparison(left, "<", right);
+    }
+
+    public static Comparison lessThan(String column, Object value) {
+        return lessThan(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison biggerThanOrEqual(Expression left, Expression right) {
+        return new Comparison(left, ">=", right);
+    }
+
+    public static Comparison biggerThanOrEqual(String column, Object value) {
+        return biggerThanOrEqual(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison lessThanOrEqual(Expression left, Expression right) {
+        return new Comparison(left, "<=", right);
+    }
+
+    public static Comparison lessThanOrEqual(String column, Object value) {
+        return lessThanOrEqual(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison like(Expression left, Expression right) {
+        return new Comparison(left, "LIKE", right);
+    }
+
+    public static Comparison like(String column, Object value) {
+        return like(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
+    public static Comparison notLike(Expression left, Expression right) {
+        return new Comparison(left, "NOT LIKE", right);
+    }
+
+    public static Comparison notLike(String column, Object value) {
+        return notLike(new ColumnEx(column), new StringEx(value.toString()));
+    }
+
     @Override
     public SerializedExpression serialize(List<String> placeholders) {
         return ExpressionUtil.serializeBinary(this.getLeft(), this.getOperation(), this.getRight(), placeholders);
