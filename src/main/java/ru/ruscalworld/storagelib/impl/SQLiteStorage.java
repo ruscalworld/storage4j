@@ -7,6 +7,9 @@ import ru.ruscalworld.storagelib.ConverterProvider;
 import ru.ruscalworld.storagelib.DefaultModel;
 import ru.ruscalworld.storagelib.Storage;
 import ru.ruscalworld.storagelib.annotations.Model;
+import ru.ruscalworld.storagelib.builder.Expression;
+import ru.ruscalworld.storagelib.builder.SerializedExpression;
+import ru.ruscalworld.storagelib.builder.expressions.Comparison;
 import ru.ruscalworld.storagelib.exceptions.InvalidModelException;
 import ru.ruscalworld.storagelib.exceptions.NotFoundException;
 import ru.ruscalworld.storagelib.util.DatabaseUtil;
@@ -54,9 +57,14 @@ public class SQLiteStorage implements Storage {
 
     @Override
     public <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws Exception {
+        return this.findAll(clazz, Comparison.equal(key, value.toString()));
+    }
+
+    @Override
+    public <T> List<T> findAll(@NotNull Class<T> clazz, Expression condition) throws Exception {
         Model model = ReflectUtil.getModelInfo(clazz);
 
-        PreparedStatement statement = this.makeSearchStatement(model, key, value);
+        PreparedStatement statement = this.makeSearchStatement(model, condition);
         ResultSet resultSet = statement.executeQuery();
         List<T> result = new ArrayList<>();
         while (resultSet.next()) result.add(this.parseRow(clazz, resultSet));
@@ -76,9 +84,14 @@ public class SQLiteStorage implements Storage {
     }
 
     private PreparedStatement makeSearchStatement(Model model, String key, Object value) throws SQLException {
-        String query = String.format("SELECT * FROM `%s` WHERE `%s` = ?", model.table(), key);
+        return this.makeSearchStatement(model, Comparison.equal(key, value.toString()));
+    }
+
+    private PreparedStatement makeSearchStatement(Model model, Expression condition) throws SQLException {
+        SerializedExpression expression = condition.serialize();
+        String query = String.format("SELECT * FROM `%s` WHERE %s", model.table(), expression.toString());
         PreparedStatement statement = this.getConnection().prepareStatement(query);
-        statement.setObject(1, value);
+        expression.processStatement(statement, 0);
         return statement;
     }
 
@@ -139,14 +152,20 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
-    public <T> void deleteAll(Class<T> clazz, String key, Object value) throws Exception {
+    public <T> void deleteAll(Class<T> clazz, Expression condition) throws Exception {
         Model model = ReflectUtil.getModelInfo(clazz);
         String table = model.table();
 
-        String query = String.format("DELETE FROM `%s` WHERE `%s` = ?", table, key);
+        SerializedExpression expression = condition.serialize();
+        String query = String.format("DELETE FROM `%s` WHERE %s", table, expression.toString());
         PreparedStatement statement = this.getConnection().prepareStatement(query);
-        statement.setObject(1, value);
+        expression.processStatement(statement, 0);
         statement.executeUpdate();
+    }
+
+    @Override
+    public <T> void deleteAll(Class<T> clazz, String key, Object value) throws Exception {
+        this.deleteAll(clazz, Comparison.equal(key, value.toString()));
     }
 
     @Override

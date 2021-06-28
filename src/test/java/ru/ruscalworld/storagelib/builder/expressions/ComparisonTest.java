@@ -5,17 +5,16 @@ import ru.ruscalworld.storagelib.builder.SerializedExpression;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ComparisonTest {
     @Test
     void equalString() {
         Comparison comparison = Comparison.equal("first string", "second string");
         SerializedExpression expression = comparison.serialize();
-        assertEquals("(? = ?)", expression.toString());
+        assertEquals("(`first string` = ?)", expression.toString());
 
         List<String> placeholders = expression.getPlaceholders();
-        assertEquals("first string", placeholders.get(0));
-        assertEquals("second string", placeholders.get(1));
+        assertEquals("second string", placeholders.get(0));
     }
 }
