@@ -82,6 +82,22 @@ public class Comparison implements Expression {
         return notLike(new ColumnEx(column), new StringEx(value.toString()));
     }
 
+    public static Comparison isNull(Expression expression) {
+        return new Comparison(expression, "IS", new NullEx());
+    }
+
+    public static Comparison isNull(String column) {
+        return isNull(new ColumnEx(column));
+    }
+
+    public static Comparison isNotNull(Expression expression) {
+        return new Comparison(expression, "IS NOT", new NullEx());
+    }
+
+    public static Comparison isNotNull(String column) {
+        return isNotNull(new ColumnEx(column));
+    }
+
     @Override
     public SerializedExpression serialize(List<String> placeholders) {
         return ExpressionUtil.serializeBinary(this.getLeft(), this.getOperation(), this.getRight(), placeholders);

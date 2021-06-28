@@ -84,4 +84,18 @@ class ComparisonTest {
         List<String> placeholders = expression.getPlaceholders();
         assertEquals("second string", placeholders.get(0));
     }
+
+    @Test
+    void isNull() {
+        Comparison comparison = Comparison.isNull("column");
+        SerializedExpression expression = comparison.serialize();
+        assertEquals("(`column` IS NULL)", expression.toString());
+    }
+
+    @Test
+    void isNotNull() {
+        Comparison comparison = Comparison.isNotNull("column");
+        SerializedExpression expression = comparison.serialize();
+        assertEquals("(`column` IS NOT NULL)", expression.toString());
+    }
 }
