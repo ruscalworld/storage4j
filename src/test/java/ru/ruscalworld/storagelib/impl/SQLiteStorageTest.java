@@ -33,12 +33,15 @@ class SQLiteStorageTest {
     @Test
     @Order(2)
     void save() throws InvalidModelException, SQLException, NotFoundException {
+        UUID uuid = UUID.randomUUID();
+
         TestModel model = new TestModel();
         model.setFloatProperty(2.5F);
         model.setDoubleProperty(7.5D);
         model.setTimestamp(new Timestamp(System.currentTimeMillis()));
         model.setStringProperty("Some String");
-        model.setUuidProperty(UUID.randomUUID());
+        model.setUuidProperty(uuid);
+        model.setBooleanProperty(true);
 
         assertDoesNotThrow(() -> storage.save(model));
 
@@ -47,6 +50,9 @@ class SQLiteStorageTest {
 
         TestModel savedModel = storage.retrieve(TestModel.class, 1);
         assertTrue(savedModel.getDefaultTimestamp().after(new Timestamp(System.currentTimeMillis() - 60 * 1000)));
+        assertTrue(savedModel.isBooleanProperty());
+        assertEquals(savedModel.getStringProperty(), "Some String");
+        assertEquals(savedModel.getUuidProperty(), uuid);
     }
 
     @Test

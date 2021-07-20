@@ -13,6 +13,7 @@ public class ConverterProvider {
         this.registerConverter(long.class, (v) -> Long.parseLong(v.toString()));
         this.registerConverter(float.class, (v) -> Float.parseFloat(v.toString()));
         this.registerConverter(double.class, (v) -> Double.parseDouble(v.toString()));
+        this.registerConverter(boolean.class, (v) -> v.equals(1) || v.equals("true"));
 
         this.registerConverter(UUID.class, (v) -> v == null ? null : UUID.fromString(v.toString()));
         this.registerConverter(Timestamp.class, (v) -> v == null ? null : Timestamp.valueOf(v.toString()));

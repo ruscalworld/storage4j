@@ -22,6 +22,9 @@ public class TestModel extends DefaultModel {
     @Property(column = "uuid")
     private UUID uuidProperty;
 
+    @Property(column = "boolean")
+    private boolean booleanProperty;
+
     @Property(column = "timestamp")
     private Timestamp timestamp;
 
@@ -79,5 +82,13 @@ public class TestModel extends DefaultModel {
 
     public void setDefaultTimestamp(Timestamp defaultTimestamp) {
         this.defaultTimestamp = defaultTimestamp;
+    }
+
+    public boolean isBooleanProperty() {
+        return booleanProperty;
+    }
+
+    public void setBooleanProperty(boolean booleanProperty) {
+        this.booleanProperty = booleanProperty;
     }
 }
