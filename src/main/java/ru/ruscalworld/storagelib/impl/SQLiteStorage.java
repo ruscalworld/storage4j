@@ -56,12 +56,12 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
-    public <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws Exception {
+    public <T> List<T> findAll(@NotNull Class<T> clazz, String key, Object value) throws InvalidModelException, SQLException {
         return this.findAll(clazz, Comparison.equal(key, value.toString()));
     }
 
     @Override
-    public <T> List<T> findAll(@NotNull Class<T> clazz, Expression condition) throws Exception {
+    public <T> List<T> findAll(@NotNull Class<T> clazz, Expression condition) throws InvalidModelException, SQLException {
         Model model = ReflectUtil.getModelInfo(clazz);
 
         PreparedStatement statement = this.makeSearchStatement(model, condition);
@@ -141,7 +141,7 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
-    public <T extends DefaultModel> void delete(T model) throws Exception {
+    public <T extends DefaultModel> void delete(T model) throws InvalidModelException, SQLException {
         Model modelInfo = ReflectUtil.getModelInfo(model.getClass());
         String table = modelInfo.table();
 
@@ -152,7 +152,7 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
-    public <T> void deleteAll(Class<T> clazz, Expression condition) throws Exception {
+    public <T> void deleteAll(Class<T> clazz, Expression condition) throws InvalidModelException, SQLException {
         Model model = ReflectUtil.getModelInfo(clazz);
         String table = model.table();
 
@@ -164,7 +164,7 @@ public class SQLiteStorage implements Storage {
     }
 
     @Override
-    public <T> void deleteAll(Class<T> clazz, String key, Object value) throws Exception {
+    public <T> void deleteAll(Class<T> clazz, String key, Object value) throws InvalidModelException, SQLException {
         this.deleteAll(clazz, Comparison.equal(key, value.toString()));
     }
 
