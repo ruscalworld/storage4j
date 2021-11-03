@@ -6,7 +6,7 @@ public class Test {
     // @Model annotation says to StorageLib in what table it should store data for models of this type
     @Model(table = "users")
     // DefaultModel is class with "id" field
-    // It's not necessary to extend it, but extending it allows you to use more methods of StorageLib
+    // It's not necessary to extend it, but it allows you to use more methods of StorageLib
     public static class User extends DefaultModel {
         // @Property annotation determines name of column in model's table for this field
         // In this case StorageLib will put value of "name" column to "userName" field
@@ -14,8 +14,8 @@ public class Test {
         @Property(column = "name")
         // Fields mustn't be static, but they can be final or not
         // You can use any type, some default types are supported out of box
-        // But you can also use your own types, but you should override toString() method, 
-        // so StorageLib can will be able them to database, and register converter using storage.registerConverter(...),
+        // You can also use your own types, but you should override toString() method, 
+        // so StorageLib will be able to save them to database, then register converter using storage.registerConverter(...),
         // so StorageLib will be able to get them from database
         private final String userName;
 
@@ -32,7 +32,7 @@ public class Test {
             this.createdAt = createdAt;
         }
 
-        // Model must have a constructor that does not require any arguments, 
+        // Model must have a constructor that does not have any arguments, 
         // so StorageLib will be able to retrieve model from database
         public User() {
             this.userName = null;
@@ -46,8 +46,8 @@ public class Test {
 
     public static void main(String[] args) throws SQLException, IOException, InvalidModelException, NotFoundException {
         // Just create new SQLiteStorage and pass JDBC connection URL to it
-        // storage variable provides access to all method you need to work with StorageLib
-        // You can save it as static field or pass it to your classes that require access to database
+        // storage variable provides access to all methods you need to work with StorageLib
+        // You can save it in a static field or pass it to your classes that require access to database
         SQLiteStorage storage = new SQLiteStorage("jdbc:sqlite:/home/example/example.db");
 
         // This tells StorageLib to run script from schema/users.sql file when storage is being initialized
@@ -60,7 +60,7 @@ public class Test {
         // It will register SQLite driver and run migrations
         storage.setup();
 
-        // Just create instance of the model as you want
+        // Just create an instance of the model as you want
         User user = new User("Test", new Timestamp(System.currentTimeMillis()));
 
         // This will INSERT a new row to your table if ID is not set
