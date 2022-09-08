@@ -90,7 +90,7 @@ More documentation is comming soon (or not)...
 <repositories>
   <repository>
     <id>ruscalworld-releases</id>
-    <url>https://maven.ruscalworld.ru/releases</url>
+    <url>https://maven.ruscal.world/releases</url>
   </repository>
 </repositories>
 ```
@@ -110,7 +110,7 @@ More documentation is comming soon (or not)...
 repositories {
   maven {
     name = 'RuscalWorld Releases'
-    url = 'https://maven.ruscalworld.ru/releases'
+    url = 'https://maven.ruscal.world/releases'
   }
 }
 ```
