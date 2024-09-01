@@ -1,4 +1,5 @@
 # StorageLib
+
 Lots of projects need to store some data persistently, but some projects are not too large to use big libraries such as Hibernate ORM. StorageLib provides a very simple ORM that makes storing data in your app much easier. It does not increase size of your binary file in many times, but saves you from writing boring SQL requests and manually mapping fields from ResultSet to your classes. Let me show you an example:
 
 ```Java
@@ -120,3 +121,7 @@ dependencies {
   implementation 'ru.ruscalworld:storagelib:VERSION'
 }
 ```
+
+## Project Status
+
+The library is made mostly to solve some of simple tasks I faced with long time ago and is not designed to be used in large projects. I do not believe that someone will need such solution in a real case, and I also do not need this library anymore. So, I have no plans to maintain it.
